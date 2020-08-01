@@ -13,8 +13,6 @@ namespace TrajectoryFinder2D.ViewModels
 
         private readonly Point _previousPanelMousePosition;
 
-        private Circle _circle;
-
         public RelayCommand<Circle> PreviewMouseMove { get; }
 
         public RelayCommand LeftMouseButtonUp { get; }
@@ -27,11 +25,11 @@ namespace TrajectoryFinder2D.ViewModels
             set => SetProperty(ref _panelMousePosition, value);
         }
 
-        public ObservableCollection<Circle> CircleCollection { get; set; }
+        public ObservableCollection<VisualShape> VisualShapeCollection { get; set; }
 
         public MainWindowViewModel()
         {
-            CircleCollection = CreateCircleCollection();
+            VisualShapeCollection = CreateVisualShapeCollection();
 
             _previousPanelMousePosition = new Point { X = -1, Y = -1 };
 
@@ -61,7 +59,7 @@ namespace TrajectoryFinder2D.ViewModels
             _previousPanelMousePosition.Y = _panelMousePosition.Y;
         }
 
-        private static ObservableCollection<Circle> CreateCircleCollection()
+        private static ObservableCollection<VisualShape> CreateVisualShapeCollection()
         {
             const int circleCount = 3;
             const int radius = 50;
@@ -70,11 +68,15 @@ namespace TrajectoryFinder2D.ViewModels
             var result = new List<Circle>(circleCount);
             for (var i = 0; i < circleCount; ++i)
             {
-                result.Add(new Circle(radius, new Point { X = radius, Y = y }));
+                result.Add(new Circle(radius, new Point { X = radius, Y = y })
+                {
+                    FillColor = new Avalonia.Media.SolidColorBrush(
+                        Avalonia.Media.Colors.Red, 0.1),
+                });
                 y += 2 * radius + 10;
             }
 
-            return new ObservableCollection<Circle>(result);
+            return new ObservableCollection<VisualShape>(result);
         }
     }
 }

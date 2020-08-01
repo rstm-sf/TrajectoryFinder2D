@@ -1,6 +1,6 @@
 namespace TrajectoryFinder2D.Models
 {
-    internal class Circle : ObservableObject
+    internal class Circle : VisualShape
     {
         private double _left;
         private double _top;

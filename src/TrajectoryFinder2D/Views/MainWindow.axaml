@@ -2,6 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:m="clr-namespace:TrajectoryFinder2D.Models"
         xmlns:vm="clr-namespace:TrajectoryFinder2D.ViewModels"
         xmlns:b="clr-namespace:TrajectoryFinder2D.Behaviours"
         xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
@@ -24,19 +25,19 @@
         <TextBlock Text="{Binding Panel.Y, StringFormat='y={0}'}" />
       </StackPanel>
       -->
-      <ItemsControl Items="{Binding CircleCollection}">
+      <ItemsControl Items="{Binding VisualShapeCollection}">
         <ItemsControl.ItemsPanel>
           <ItemsPanelTemplate>
-            <Canvas Background="Black">
+            <Canvas Background="WhiteSmoke">
               <i:Interaction.Behaviors>
                 <b:MouseBehaviour MousePosition="{Binding PanelMousePosition, Mode=OneWayToSource}" />
               </i:Interaction.Behaviors>
             </Canvas>
           </ItemsPanelTemplate>
         </ItemsControl.ItemsPanel>
-        <ItemsControl.ItemTemplate>
-          <DataTemplate>
-            <Ellipse Fill="Red"
+        <ItemsControl.DataTemplates>
+          <DataTemplate DataType="{x:Type m:Circle}">
+            <Ellipse Fill="{Binding FillColor}"
                      Stroke="Black"
                      Width="{Binding Diameter}"
                      Height="{Binding Diameter}"
@@ -58,7 +59,7 @@
               </i:Interaction.Behaviors>
             </Ellipse>
           </DataTemplate>
-        </ItemsControl.ItemTemplate>
+        </ItemsControl.DataTemplates>
       </ItemsControl>
     </DockPanel>
   </Grid>
