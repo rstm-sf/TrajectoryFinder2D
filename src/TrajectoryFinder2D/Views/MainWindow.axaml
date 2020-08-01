@@ -1,0 +1,56 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:TrajectoryFinder2D.ViewModels"
+        xmlns:b="clr-namespace:TrajectoryFinder2D.Behaviours"
+        xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+        xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="TrajectoryFinder2D.Views.MainWindow"
+        Title="TrajectoryFinder2D">
+  <Grid>
+    <DockPanel>
+      <!-- Un-comment if you want to view the coordinates -->
+      <!--
+      <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+        <TextBlock Text="{Binding Panel.X, StringFormat='X={0}'}" />
+        <TextBlock Text="{Binding Panel.Y, StringFormat='y={0}'}" />
+      </StackPanel>
+      -->
+
+      <Canvas x:Name="LayoutRoot" Background="White">
+
+        <i:Interaction.Behaviors>
+          <b:MouseBehaviour MousePosition="{Binding PanelMousePosition, Mode=OneWayToSource}" />
+        </i:Interaction.Behaviors>
+
+        <Ellipse x:Name="ellipse"
+                 Fill="Red"
+                 Stroke="Black"
+                 Width="{Binding Circle.Diameter}"
+                 Height="{Binding Circle.Diameter}"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Bottom"
+                 Canvas.Left="{Binding Circle.Left, Mode=TwoWay}"
+                 Canvas.Top="{Binding Circle.Top, Mode=TwoWay}" >
+
+          <i:Interaction.Behaviors>
+            <ia:EventTriggerBehavior EventName="PointerPressed" SourceObject="{Binding #ellipse}" >
+              <ia:InvokeCommandAction Command="{Binding LeftMouseButtonDown}" />
+            </ia:EventTriggerBehavior>
+
+            <ia:EventTriggerBehavior EventName="PointerReleased" SourceObject="{Binding #ellipse}" >
+              <ia:InvokeCommandAction Command="{Binding LeftMouseButtonUp}" />
+            </ia:EventTriggerBehavior>
+
+            <ia:EventTriggerBehavior EventName="PointerMoved" SourceObject="{Binding #ellipse}" >
+              <ia:InvokeCommandAction Command="{Binding PreviewMouseMove}" />
+            </ia:EventTriggerBehavior>
+          </i:Interaction.Behaviors>
+
+        </Ellipse>
+      </Canvas>
+    </DockPanel>
+  </Grid>
+</Window>
