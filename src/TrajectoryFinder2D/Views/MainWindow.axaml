@@ -9,6 +9,12 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="TrajectoryFinder2D.Views.MainWindow"
         Title="TrajectoryFinder2D">
+  <Window.Styles >
+    <Style Selector="ItemsControl > ContentPresenter">
+      <Setter Property="Canvas.Left" Value="{Binding Left}"/>
+      <Setter Property="Canvas.Top" Value="{Binding Top}"/>
+    </Style>
+  </Window.Styles>
   <Grid>
     <DockPanel>
       <!-- Un-comment if you want to view the coordinates -->
@@ -18,40 +24,42 @@
         <TextBlock Text="{Binding Panel.Y, StringFormat='y={0}'}" />
       </StackPanel>
       -->
-
-      <Canvas x:Name="LayoutRoot" Background="White">
-
-        <i:Interaction.Behaviors>
-          <b:MouseBehaviour MousePosition="{Binding PanelMousePosition, Mode=OneWayToSource}" />
-        </i:Interaction.Behaviors>
-
-        <Ellipse x:Name="ellipse"
-                 Fill="Red"
-                 Stroke="Black"
-                 Width="{Binding Circle.Diameter}"
-                 Height="{Binding Circle.Diameter}"
-                 HorizontalAlignment="Left"
-                 VerticalAlignment="Bottom"
-                 Canvas.Left="{Binding Circle.Left, Mode=TwoWay}"
-                 Canvas.Top="{Binding Circle.Top, Mode=TwoWay}" >
-
-          <i:Interaction.Behaviors>
-            <ia:EventTriggerBehavior EventName="PointerPressed" SourceObject="{Binding #ellipse}" >
-              <ia:InvokeCommandAction Command="{Binding LeftMouseButtonDown}" />
-            </ia:EventTriggerBehavior>
-
-            <ia:EventTriggerBehavior EventName="PointerReleased" SourceObject="{Binding #ellipse}" >
-              <ia:InvokeCommandAction Command="{Binding LeftMouseButtonUp}" />
-            </ia:EventTriggerBehavior>
-
-            <ia:EventTriggerBehavior EventName="PointerMoved" SourceObject="{Binding #ellipse}" >
-              <ia:InvokeCommandAction Command="{Binding PreviewMouseMove}"
-                                      CommandParameter="{Binding Circle}" />
-            </ia:EventTriggerBehavior>
-          </i:Interaction.Behaviors>
-
-        </Ellipse>
-      </Canvas>
+      <ItemsControl Items="{Binding CircleCollection}">
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate>
+            <Canvas Background="Black">
+              <i:Interaction.Behaviors>
+                <b:MouseBehaviour MousePosition="{Binding PanelMousePosition, Mode=OneWayToSource}" />
+              </i:Interaction.Behaviors>
+            </Canvas>
+          </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+          <DataTemplate>
+            <Ellipse Fill="Red"
+                     Stroke="Black"
+                     Width="{Binding Diameter}"
+                     Height="{Binding Diameter}"
+                     HorizontalAlignment="Left"
+                     VerticalAlignment="Bottom"
+                     Canvas.Left="{Binding Left, Mode=TwoWay}"
+                     Canvas.Top="{Binding Top, Mode=TwoWay}" >
+              <i:Interaction.Behaviors>
+                <ia:EventTriggerBehavior EventName="PointerPressed" >
+                  <ia:InvokeCommandAction Command="{Binding $parent[ItemsControl].DataContext.LeftMouseButtonDown}" />
+                </ia:EventTriggerBehavior>
+                <ia:EventTriggerBehavior EventName="PointerReleased" >
+                  <ia:InvokeCommandAction Command="{Binding $parent[ItemsControl].DataContext.LeftMouseButtonUp}" />
+                </ia:EventTriggerBehavior>
+                <ia:EventTriggerBehavior EventName="PointerMoved" >
+                  <ia:InvokeCommandAction Command="{Binding $parent[ItemsControl].DataContext.PreviewMouseMove}"
+                                          CommandParameter="{Binding Path=.}" />
+                </ia:EventTriggerBehavior>
+              </i:Interaction.Behaviors>
+            </Ellipse>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
     </DockPanel>
   </Grid>
 </Window>

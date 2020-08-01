@@ -1,4 +1,6 @@
-﻿using TrajectoryFinder2D.Commands;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using TrajectoryFinder2D.Commands;
 using TrajectoryFinder2D.Models;
 
 namespace TrajectoryFinder2D.ViewModels
@@ -25,16 +27,11 @@ namespace TrajectoryFinder2D.ViewModels
             set => SetProperty(ref _panelMousePosition, value);
         }
 
-        public Circle Circle
-        {
-            get => _circle;
-            set => SetProperty(ref _circle, value);
-        }
+        public ObservableCollection<Circle> CircleCollection { get; set; }
 
         public MainWindowViewModel()
         {
-            var radius = 50;
-            Circle = new Circle(radius, new Point { X = radius, Y = radius });
+            CircleCollection = CreateCircleCollection();
 
             _previousPanelMousePosition = new Point { X = -1, Y = -1 };
 
@@ -62,6 +59,22 @@ namespace TrajectoryFinder2D.ViewModels
         {
             _previousPanelMousePosition.X = _panelMousePosition.X;
             _previousPanelMousePosition.Y = _panelMousePosition.Y;
+        }
+
+        private static ObservableCollection<Circle> CreateCircleCollection()
+        {
+            const int circleCount = 3;
+            const int radius = 50;
+
+            var y = radius;
+            var result = new List<Circle>(circleCount);
+            for (var i = 0; i < circleCount; ++i)
+            {
+                result.Add(new Circle(radius, new Point { X = radius, Y = y }));
+                y += 2 * radius + 10;
+            }
+
+            return new ObservableCollection<Circle>(result);
         }
     }
 }
