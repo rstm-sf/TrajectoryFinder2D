@@ -13,7 +13,7 @@ namespace TrajectoryFinder2D.ViewModels
 
         private Circle _circle;
 
-        public RelayCommand PreviewMouseMove { get; }
+        public RelayCommand<Circle> PreviewMouseMove { get; }
 
         public RelayCommand LeftMouseButtonUp { get; }
 
@@ -39,28 +39,23 @@ namespace TrajectoryFinder2D.ViewModels
             _previousPanelMousePosition = new Point { X = -1, Y = -1 };
 
             LeftMouseButtonDown = new RelayCommand(
-                parameter =>
+                _ =>
                 {
                     _isShapeCaptured = true;
                     SavePreviousPanelMousePosition();
                 });
 
-            LeftMouseButtonUp = new RelayCommand(parameter => _isShapeCaptured = false);
+            LeftMouseButtonUp = new RelayCommand(_ => _isShapeCaptured = false);
 
-            PreviewMouseMove = new RelayCommand(
-                parameter =>
+            PreviewMouseMove = new RelayCommand<Circle>(
+                circle =>
                 {
                     if (!_isShapeCaptured)
                         return;
-                    MoveShape();
+                    circle.Left += _panelMousePosition.X - _previousPanelMousePosition.X;
+                    circle.Top += _panelMousePosition.Y - _previousPanelMousePosition.Y;
                     SavePreviousPanelMousePosition();
                 });
-        }
-
-        private void MoveShape()
-        {
-            Circle.Left += _panelMousePosition.X - _previousPanelMousePosition.X;
-            Circle.Top += _panelMousePosition.Y - _previousPanelMousePosition.Y;
         }
 
         private void SavePreviousPanelMousePosition()

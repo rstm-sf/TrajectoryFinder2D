@@ -45,7 +45,8 @@
             </ia:EventTriggerBehavior>
 
             <ia:EventTriggerBehavior EventName="PointerMoved" SourceObject="{Binding #ellipse}" >
-              <ia:InvokeCommandAction Command="{Binding PreviewMouseMove}" />
+              <ia:InvokeCommandAction Command="{Binding PreviewMouseMove}"
+                                      CommandParameter="{Binding Circle}" />
             </ia:EventTriggerBehavior>
           </i:Interaction.Behaviors>
 
