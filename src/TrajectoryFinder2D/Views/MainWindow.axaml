@@ -59,7 +59,7 @@
                       Height="{Binding Length}" />
         </DataTemplate>
         <DataTemplate DataType="{x:Type m:PolyLine}">
-          <Polyline Stroke="{Binding FillColor}" Points="{Binding Points}" />
+          <Polyline Stroke="{Binding FillColor}" Points="{Binding Points, Mode=OneWay}" />
         </DataTemplate>
       </ItemsControl.DataTemplates>
     </ItemsControl>

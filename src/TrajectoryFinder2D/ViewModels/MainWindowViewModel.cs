@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using Avalonia.Threading;
 using TrajectoryFinder2D.Commands;
 using TrajectoryFinder2D.Models;
+using TrajectoryFinder2D.Utils;
 
 namespace TrajectoryFinder2D.ViewModels
 {
@@ -47,7 +47,7 @@ namespace TrajectoryFinder2D.ViewModels
             set => SetProperty(ref _panelMousePosition, value);
         }
 
-        public ObservableCollection<ShapeBase> ShapeCollection { get; set; }
+        public ItemsChangeObservableCollection<ShapeBase> ShapeCollection { get; set; }
 
         public MainWindowViewModel()
         {
@@ -63,7 +63,7 @@ namespace TrajectoryFinder2D.ViewModels
             _square = new Square(20);
             _polyLine = new PolyLine();
 
-            ShapeCollection = new ObservableCollection<ShapeBase>(_circles);
+            ShapeCollection = new ItemsChangeObservableCollection<ShapeBase>(_circles);
 
             _previousPanelMousePosition = new Point { X = -1, Y = -1 };
 
@@ -113,6 +113,18 @@ namespace TrajectoryFinder2D.ViewModels
             var times = _travelStarts.ToPointTimes[_tickCount];
             for (var i = 0; i < _circles.Count; ++i)
                 _circles[i].Radius = ConvertToViewRadius(times[i] * _velocity);
+
+            if (MathHelper.TryFindThreeCircleIntersection(
+                _circles[0], _circles[1], _circles[2], out var point))
+            {
+                _square.Center = point;
+                _polyLine.AddPoint(point);
+                if (ShapeCollection.Count == _circles.Count)
+                {
+                    ShapeCollection.Add(_square);
+                    ShapeCollection.Add(_polyLine);
+                }
+            }
 
             ++_tickCount;
         }

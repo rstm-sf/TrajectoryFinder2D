@@ -17,5 +17,11 @@ namespace TrajectoryFinder2D.Models
         {
             Points.AddRange(points);
         }
+
+        public void AddPoint(Point point)
+        {
+            Points.Add(new Avalonia.Point(point.X, point.Y));
+            NotifyPropertyChanged(nameof(Points));
+        }
     }
 }
