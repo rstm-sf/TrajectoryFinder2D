@@ -10,6 +10,7 @@ namespace TrajectoryFinder2D.Models
         public PolyLine()
         {
             Points = new AvaloniaList<Avalonia.Point>();
+            FillColor = Avalonia.Media.Brushes.Red;
         }
 
         public PolyLine(IReadOnlyList<Avalonia.Point> points)

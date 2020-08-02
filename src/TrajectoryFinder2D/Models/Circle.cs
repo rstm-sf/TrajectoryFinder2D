@@ -1,16 +1,14 @@
+using System;
+
 namespace TrajectoryFinder2D.Models
 {
     internal class Circle : ShapeWithLeftTopCornerBase
     {
         private double _radius;
 
-        public double Diameter => _radius * 2;
+        private Point _center;
 
-        public Point Center => new Point
-        {
-            X = Left + _radius,
-            Y = Top + _radius,
-        };
+        public double Diameter => _radius * 2;
 
         public double Radius
         {
@@ -20,16 +18,42 @@ namespace TrajectoryFinder2D.Models
                 if (SetProperty(ref _radius, value))
                 {
                     NotifyPropertyChanged(nameof(Diameter));
-                    NotifyPropertyChanged(nameof(Center));
+                    Center = new Point
+                    {
+                        X = Top + _radius,
+                        Y = Left + _radius,
+                    };
                 }
             }
         }
 
+        public Point Center
+        {
+            get => _center;
+            set
+            {
+                if (value is null)
+                    throw new ArgumentException(nameof(value));
+
+                if (SetProperty(ref _center, value))
+                {
+                    Left = _center.X - _radius;
+                    Top = _center.Y - _radius;
+                }
+            }
+        }
+
+        public Circle()
+        {
+            FillColor = new Avalonia.Media.SolidColorBrush(
+                            Avalonia.Media.Colors.Green, 0.1);
+        }
+
         public Circle(double radius, Point center)
+            : this()
         {
             Radius = radius;
-            Left = center.X - radius;
-            Top = center.Y - radius;
+            Center = center;
         }
     }
 }

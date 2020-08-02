@@ -35,7 +35,12 @@ namespace TrajectoryFinder2D.ViewModels
 
         public MainWindowViewModel()
         {
-            _circles = new List<Circle>();
+            _circles = new List<Circle>()
+            {
+                new Circle(),
+                new Circle(),
+                new Circle(),
+            };
             _square = new Square(20, new Point { X = 200, Y = 100, });
             _polyLine = new PolyLine();
 
@@ -71,34 +76,17 @@ namespace TrajectoryFinder2D.ViewModels
 
         private ObservableCollection<ShapeBase> CreateShapeCollection()
         {
-            const int circleCount = 3;
             const int radius = 50;
             var y = radius;
 
-            for (var i = 0; i < circleCount; ++i)
+            foreach (var circle in _circles)
             {
-                _circles.Add(new Circle(radius, new Point { X = radius, Y = y })
-                {
-                    FillColor = new Avalonia.Media.SolidColorBrush(
-                        Avalonia.Media.Colors.Green, 0.1),
-                });
+                circle.Radius = radius;
+                circle.Center = new Point { X = radius, Y = y };
                 y += 2 * radius + 10;
             }
 
-            _square.FillColor = Avalonia.Media.Brushes.Blue;
-
-            _polyLine.Points.AddRange(new List<Avalonia.Point>
-            {
-                new Avalonia.Point(200, 200),
-                new Avalonia.Point(300, 300),
-            });
-            _polyLine.FillColor = Avalonia.Media.Brushes.Red;
-
-            var result = new List<ShapeBase>(circleCount + 2);
-            result.AddRange(_circles);
-            result.Add(_square);
-            result.Add(_polyLine);
-            return new ObservableCollection<ShapeBase>(result);
+            return new ObservableCollection<ShapeBase>(_circles);
         }
     }
 }

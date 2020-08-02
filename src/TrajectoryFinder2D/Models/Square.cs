@@ -13,8 +13,11 @@ namespace TrajectoryFinder2D.Models
         public Square(double length, Point center)
         {
             Length = length;
+
             Left = center.X - length / 2;
             Top = center.Y - length / 2;
+
+            FillColor = Avalonia.Media.Brushes.Blue;
         }
     }
 }
