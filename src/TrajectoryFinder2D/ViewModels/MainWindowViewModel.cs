@@ -9,7 +9,13 @@ namespace TrajectoryFinder2D.ViewModels
 {
     internal class MainWindowViewModel : ObservableObjectBase
     {
+        private const double Scale = 6;
+
+        private readonly Point Offset = new Point { X = 200, Y = 200, };
+
         private readonly DispatcherTimer _timer;
+
+        private int _tickCount;
 
         private bool _isShapeCaptured;
 
@@ -17,11 +23,15 @@ namespace TrajectoryFinder2D.ViewModels
 
         private readonly Point _previousPanelMousePosition;
 
-        private readonly List<Circle> _circles;
+        private readonly IReadOnlyList<Circle> _circles;
 
         private readonly Square _square;
 
         private readonly PolyLine _polyLine;
+
+        private readonly double _velocity;
+
+        private readonly TravelStarts _travelStarts;
 
         public RelayCommand<Circle> PreviewMouseMove { get; }
 
@@ -39,16 +49,19 @@ namespace TrajectoryFinder2D.ViewModels
 
         public MainWindowViewModel()
         {
+            _velocity = 1e6;
+            _travelStarts = new TravelStarts();
+
             _circles = new List<Circle>()
             {
-                new Circle(),
-                new Circle(),
-                new Circle(),
+                new Circle(50, ConvertToViewPoint(_travelStarts.Points[0])),
+                new Circle(50, ConvertToViewPoint(_travelStarts.Points[1])),
+                new Circle(50, ConvertToViewPoint(_travelStarts.Points[2])),
             };
-            _square = new Square(20, new Point { X = 200, Y = 100, });
+            _square = new Square(20);
             _polyLine = new PolyLine();
 
-            ShapeCollection = CreateShapeCollection();
+            ShapeCollection = new ObservableCollection<ShapeBase>(_circles);
 
             _previousPanelMousePosition = new Point { X = -1, Y = -1 };
 
@@ -88,31 +101,27 @@ namespace TrajectoryFinder2D.ViewModels
 
         private void Tick()
         {
-            const int radius = 50;
-            var rand = new Random();
-            var y = rand.Next(100) + radius;
-
-            foreach (var circle in _circles)
+            if (_tickCount == _travelStarts.ToPointTimes.Count)
             {
-                circle.Radius = radius;
-                circle.Center = new Point { X = radius, Y = y };
-                y += 2 * radius + 10;
-            }
-        }
-
-        private ObservableCollection<ShapeBase> CreateShapeCollection()
-        {
-            const int radius = 50;
-            var y = radius;
-
-            foreach (var circle in _circles)
-            {
-                circle.Radius = radius;
-                circle.Center = new Point { X = radius, Y = y };
-                y += 2 * radius + 10;
+                _timer.Stop();
+                return;
             }
 
-            return new ObservableCollection<ShapeBase>(_circles);
+            var times = _travelStarts.ToPointTimes[_tickCount];
+            for (var i = 0; i < _circles.Count; ++i)
+                _circles[i].Radius = ConvertToViewRadius(times[i] * _velocity);
+
+            ++_tickCount;
         }
+
+        private Point ConvertToViewPoint(Point point) =>
+            new Point
+            {
+                X = point.X * Scale + Offset.X,
+                Y = point.Y * Scale + Offset.Y,
+            };
+
+        private double ConvertToViewRadius(double radius) =>
+            radius * Scale;
     }
 }

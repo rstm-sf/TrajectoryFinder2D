@@ -1,9 +1,21 @@
 using System;
+using System.Collections.Generic;
+using Avalonia.Media;
 
 namespace TrajectoryFinder2D.Models
 {
     internal class Circle : ShapeWithLeftTopCornerBase
     {
+        private static IReadOnlyList<ISolidColorBrush> SolidColorBrushes =
+            new List<ISolidColorBrush>
+            {
+                new SolidColorBrush(Colors.Red, 0.2),
+                new SolidColorBrush(Colors.Green, 0.2),
+                new SolidColorBrush(Colors.Blue, 0.2),
+            };
+
+        private static int Count;
+
         private double _radius;
 
         private Point _center;
@@ -18,11 +30,7 @@ namespace TrajectoryFinder2D.Models
                 if (SetProperty(ref _radius, value))
                 {
                     NotifyPropertyChanged(nameof(Diameter));
-                    Center = new Point
-                    {
-                        X = Top + _radius,
-                        Y = Left + _radius,
-                    };
+                    UpdateLeftTopCorner();
                 }
             }
         }
@@ -33,20 +41,18 @@ namespace TrajectoryFinder2D.Models
             set
             {
                 if (value is null)
-                    throw new ArgumentException(nameof(value));
+                    throw new ArgumentNullException(nameof(value));
 
                 if (SetProperty(ref _center, value))
-                {
-                    Left = _center.X - _radius;
-                    Top = _center.Y - _radius;
-                }
+                    UpdateLeftTopCorner();
             }
         }
 
         public Circle()
         {
-            FillColor = new Avalonia.Media.SolidColorBrush(
-                            Avalonia.Media.Colors.Green, 0.2);
+            Center = new Point();
+            FillColor = SolidColorBrushes[Count % SolidColorBrushes.Count];
+            ++Count;
         }
 
         public Circle(double radius, Point center)
@@ -54,6 +60,12 @@ namespace TrajectoryFinder2D.Models
         {
             Radius = radius;
             Center = center;
+        }
+
+        private void UpdateLeftTopCorner()
+        {
+            Left = _center.X - _radius;
+            Top = _center.Y - _radius;
         }
     }
 }

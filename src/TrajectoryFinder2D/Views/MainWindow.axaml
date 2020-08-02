@@ -9,11 +9,12 @@
         xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="TrajectoryFinder2D.Views.MainWindow"
+        Width="600" Height="600"
         Title="TrajectoryFinder2D">
-  <Window.Styles >
+  <Window.Styles>
     <Style Selector="ItemsControl > ContentPresenter">
-      <Setter Property="Canvas.Left" Value="{Binding Left}"/>
-      <Setter Property="Canvas.Top" Value="{Binding Top}"/>
+      <Setter Property="Canvas.Left" Value="{Binding Left}" />
+      <Setter Property="Canvas.Top" Value="{Binding Top}" />
     </Style>
   </Window.Styles>
   <Grid>
@@ -21,7 +22,7 @@
       <ItemsControl Items="{Binding ShapeCollection}">
         <ItemsControl.ItemsPanel>
           <ItemsPanelTemplate>
-            <Canvas Background="WhiteSmoke">
+            <Canvas Background="White">
               <i:Interaction.Behaviors>
                 <b:MouseBehaviour MousePosition="{Binding PanelMousePosition, Mode=OneWayToSource}" />
               </i:Interaction.Behaviors>
@@ -33,9 +34,7 @@
             <Ellipse Fill="{Binding FillColor}"
                      Stroke="Black"
                      Width="{Binding Diameter}"
-                     Height="{Binding Diameter}"
-                     Canvas.Left="{Binding Left}"
-                     Canvas.Top="{Binding Top}" >
+                     Height="{Binding Diameter}" >
               <i:Interaction.Behaviors>
                 <ia:EventTriggerBehavior EventName="PointerPressed" >
                   <ia:InvokeCommandAction Command="{Binding $parent[ItemsControl].DataContext.LeftMouseButtonDown}" />
@@ -53,9 +52,7 @@
           <DataTemplate DataType="{x:Type m:Square}">
             <Rectangle Fill="{Binding FillColor}"
                        Width="{Binding Length}"
-                       Height="{Binding Length}"
-                       Canvas.Left="{Binding Left}"
-                       Canvas.Top="{Binding Top}" />
+                       Height="{Binding Length}" />
           </DataTemplate>
           <DataTemplate DataType="{x:Type m:PolyLine}">
             <Polyline Stroke="{Binding FillColor}" Points="{Binding Points}" />
