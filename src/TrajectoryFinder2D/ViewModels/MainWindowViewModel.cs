@@ -39,6 +39,8 @@ namespace TrajectoryFinder2D.ViewModels
 
         public RelayCommand LeftMouseButtonDown { get; }
 
+        public RelayCommand Start { get; }
+
         public Point PanelMousePosition
         {
             get => _panelMousePosition;
@@ -84,13 +86,14 @@ namespace TrajectoryFinder2D.ViewModels
                     SavePreviousPanelMousePosition();
                 });
 
+            Start = new RelayCommand(_ => _timer.Start());
+
             var ticksPerSecond = 1;
             _timer = new DispatcherTimer
             {
                 Interval = new TimeSpan(0, 0, 0, 0, 1000 / ticksPerSecond)
             };
             _timer.Tick += (sender, args) => Tick();
-            _timer.Start();
         }
 
         private void SavePreviousPanelMousePosition()

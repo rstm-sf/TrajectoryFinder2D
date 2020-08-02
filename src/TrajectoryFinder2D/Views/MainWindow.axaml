@@ -17,48 +17,51 @@
       <Setter Property="Canvas.Top" Value="{Binding Top}" />
     </Style>
   </Window.Styles>
-  <Grid>
-    <DockPanel>
-      <ItemsControl Items="{Binding ShapeCollection}">
-        <ItemsControl.ItemsPanel>
-          <ItemsPanelTemplate>
-            <Canvas Background="White">
-              <i:Interaction.Behaviors>
-                <b:MouseBehaviour MousePosition="{Binding PanelMousePosition, Mode=OneWayToSource}" />
-              </i:Interaction.Behaviors>
-            </Canvas>
-          </ItemsPanelTemplate>
-        </ItemsControl.ItemsPanel>
-        <ItemsControl.DataTemplates>
-          <DataTemplate DataType="{x:Type m:Circle}">
-            <Ellipse Fill="{Binding FillColor}"
-                     Stroke="Black"
-                     Width="{Binding Diameter}"
-                     Height="{Binding Diameter}" >
-              <i:Interaction.Behaviors>
-                <ia:EventTriggerBehavior EventName="PointerPressed" >
-                  <ia:InvokeCommandAction Command="{Binding $parent[ItemsControl].DataContext.LeftMouseButtonDown}" />
-                </ia:EventTriggerBehavior>
-                <ia:EventTriggerBehavior EventName="PointerReleased" >
-                  <ia:InvokeCommandAction Command="{Binding $parent[ItemsControl].DataContext.LeftMouseButtonUp}" />
-                </ia:EventTriggerBehavior>
-                <ia:EventTriggerBehavior EventName="PointerMoved" >
-                  <ia:InvokeCommandAction Command="{Binding $parent[ItemsControl].DataContext.PreviewMouseMove}"
-                                          CommandParameter="{Binding Path=.}" />
-                </ia:EventTriggerBehavior>
-              </i:Interaction.Behaviors>
-            </Ellipse>
-          </DataTemplate>
-          <DataTemplate DataType="{x:Type m:Square}">
-            <Rectangle Fill="{Binding FillColor}"
-                       Width="{Binding Length}"
-                       Height="{Binding Length}" />
-          </DataTemplate>
-          <DataTemplate DataType="{x:Type m:PolyLine}">
-            <Polyline Stroke="{Binding FillColor}" Points="{Binding Points}" />
-          </DataTemplate>
-        </ItemsControl.DataTemplates>
-      </ItemsControl>
-    </DockPanel>
-  </Grid>
+  <DockPanel>
+    <Button Content="Start"
+            DockPanel.Dock="Bottom"
+            Margin="4"
+            HorizontalAlignment="Stretch"
+            Command="{Binding Start}"/>
+    <ItemsControl Items="{Binding ShapeCollection}">
+      <ItemsControl.ItemsPanel>
+        <ItemsPanelTemplate>
+          <Canvas Background="White" Margin="4">
+            <i:Interaction.Behaviors>
+              <b:MouseBehaviour MousePosition="{Binding PanelMousePosition, Mode=OneWayToSource}" />
+            </i:Interaction.Behaviors>
+          </Canvas>
+        </ItemsPanelTemplate>
+      </ItemsControl.ItemsPanel>
+      <ItemsControl.DataTemplates>
+        <DataTemplate DataType="{x:Type m:Circle}">
+          <Ellipse Fill="{Binding FillColor}"
+                    Stroke="Black"
+                    Width="{Binding Diameter}"
+                    Height="{Binding Diameter}" >
+            <i:Interaction.Behaviors>
+              <ia:EventTriggerBehavior EventName="PointerPressed" >
+                <ia:InvokeCommandAction Command="{Binding $parent[ItemsControl].DataContext.LeftMouseButtonDown}" />
+              </ia:EventTriggerBehavior>
+              <ia:EventTriggerBehavior EventName="PointerReleased" >
+                <ia:InvokeCommandAction Command="{Binding $parent[ItemsControl].DataContext.LeftMouseButtonUp}" />
+              </ia:EventTriggerBehavior>
+              <ia:EventTriggerBehavior EventName="PointerMoved" >
+                <ia:InvokeCommandAction Command="{Binding $parent[ItemsControl].DataContext.PreviewMouseMove}"
+                                        CommandParameter="{Binding Path=.}" />
+              </ia:EventTriggerBehavior>
+            </i:Interaction.Behaviors>
+          </Ellipse>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type m:Square}">
+          <Rectangle Fill="{Binding FillColor}"
+                      Width="{Binding Length}"
+                      Height="{Binding Length}" />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type m:PolyLine}">
+          <Polyline Stroke="{Binding FillColor}" Points="{Binding Points}" />
+        </DataTemplate>
+      </ItemsControl.DataTemplates>
+    </ItemsControl>
+  </DockPanel>
 </Window>
