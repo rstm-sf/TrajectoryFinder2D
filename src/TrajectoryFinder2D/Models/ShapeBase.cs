@@ -2,7 +2,7 @@ using Avalonia.Media;
 
 namespace TrajectoryFinder2D.Models
 {
-    internal class VisualShape : ObservableObject
+    internal abstract class ShapeBase : ObservableObjectBase
     {
         private ISolidColorBrush _fillColor;
 

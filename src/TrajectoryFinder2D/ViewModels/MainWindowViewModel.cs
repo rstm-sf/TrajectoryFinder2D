@@ -5,13 +5,19 @@ using TrajectoryFinder2D.Models;
 
 namespace TrajectoryFinder2D.ViewModels
 {
-    internal class MainWindowViewModel : ObservableObject
+    internal class MainWindowViewModel : ObservableObjectBase
     {
         bool _isShapeCaptured;
 
         private Point _panelMousePosition;
 
         private readonly Point _previousPanelMousePosition;
+
+        private readonly List<Circle> _circles;
+
+        private readonly Square _square;
+
+        private readonly PolyLine _polyLine;
 
         public RelayCommand<Circle> PreviewMouseMove { get; }
 
@@ -25,11 +31,15 @@ namespace TrajectoryFinder2D.ViewModels
             set => SetProperty(ref _panelMousePosition, value);
         }
 
-        public ObservableCollection<VisualShape> VisualShapeCollection { get; set; }
+        public ObservableCollection<ShapeBase> ShapeCollection { get; set; }
 
         public MainWindowViewModel()
         {
-            VisualShapeCollection = CreateVisualShapeCollection();
+            _circles = new List<Circle>();
+            _square = new Square(20, new Point { X = 200, Y = 100, });
+            _polyLine = new PolyLine();
+
+            ShapeCollection = CreateShapeCollection();
 
             _previousPanelMousePosition = new Point { X = -1, Y = -1 };
 
@@ -59,24 +69,36 @@ namespace TrajectoryFinder2D.ViewModels
             _previousPanelMousePosition.Y = _panelMousePosition.Y;
         }
 
-        private static ObservableCollection<VisualShape> CreateVisualShapeCollection()
+        private ObservableCollection<ShapeBase> CreateShapeCollection()
         {
             const int circleCount = 3;
             const int radius = 50;
-
             var y = radius;
-            var result = new List<Circle>(circleCount);
+
             for (var i = 0; i < circleCount; ++i)
             {
-                result.Add(new Circle(radius, new Point { X = radius, Y = y })
+                _circles.Add(new Circle(radius, new Point { X = radius, Y = y })
                 {
                     FillColor = new Avalonia.Media.SolidColorBrush(
-                        Avalonia.Media.Colors.Red, 0.1),
+                        Avalonia.Media.Colors.Green, 0.1),
                 });
                 y += 2 * radius + 10;
             }
 
-            return new ObservableCollection<VisualShape>(result);
+            _square.FillColor = Avalonia.Media.Brushes.Blue;
+
+            _polyLine.Points.AddRange(new List<Avalonia.Point>
+            {
+                new Avalonia.Point(200, 200),
+                new Avalonia.Point(300, 300),
+            });
+            _polyLine.FillColor = Avalonia.Media.Brushes.Red;
+
+            var result = new List<ShapeBase>(circleCount + 2);
+            result.AddRange(_circles);
+            result.Add(_square);
+            result.Add(_polyLine);
+            return new ObservableCollection<ShapeBase>(result);
         }
     }
 }

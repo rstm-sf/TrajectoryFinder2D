@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 
 namespace TrajectoryFinder2D
 {
-    internal class ObservableObject : INotifyPropertyChanged
+    internal abstract class ObservableObjectBase : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 

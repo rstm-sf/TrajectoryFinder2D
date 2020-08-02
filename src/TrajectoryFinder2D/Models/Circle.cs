@@ -1,31 +1,29 @@
 namespace TrajectoryFinder2D.Models
 {
-    internal class Circle : VisualShape
+    internal class Circle : ShapeWithLeftTopCornerBase
     {
-        private double _left;
-        private double _top;
+        private double _radius;
 
-        public double Radius { get; }
-
-        public double Left
-        {
-            get => _left;
-            set => SetProperty(ref _left, value);
-        }
-
-        public double Top
-        {
-            get => _top;
-            set => SetProperty(ref _top, value);
-        }
-
-        public double Diameter => Radius * 2;
+        public double Diameter => _radius * 2;
 
         public Point Center => new Point
         {
-            X = _left + Radius,
-            Y = _top + Radius,
+            X = Left + _radius,
+            Y = Top + _radius,
         };
+
+        public double Radius
+        {
+            get => _radius;
+            set
+            {
+                if (SetProperty(ref _radius, value))
+                {
+                    NotifyPropertyChanged(nameof(Diameter));
+                    NotifyPropertyChanged(nameof(Center));
+                }
+            }
+        }
 
         public Circle(double radius, Point center)
         {

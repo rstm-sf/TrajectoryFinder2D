@@ -25,7 +25,7 @@
         <TextBlock Text="{Binding Panel.Y, StringFormat='y={0}'}" />
       </StackPanel>
       -->
-      <ItemsControl Items="{Binding VisualShapeCollection}">
+      <ItemsControl Items="{Binding ShapeCollection}">
         <ItemsControl.ItemsPanel>
           <ItemsPanelTemplate>
             <Canvas Background="WhiteSmoke">
@@ -41,10 +41,8 @@
                      Stroke="Black"
                      Width="{Binding Diameter}"
                      Height="{Binding Diameter}"
-                     HorizontalAlignment="Left"
-                     VerticalAlignment="Bottom"
-                     Canvas.Left="{Binding Left, Mode=TwoWay}"
-                     Canvas.Top="{Binding Top, Mode=TwoWay}" >
+                     Canvas.Left="{Binding Left}"
+                     Canvas.Top="{Binding Top}" >
               <i:Interaction.Behaviors>
                 <ia:EventTriggerBehavior EventName="PointerPressed" >
                   <ia:InvokeCommandAction Command="{Binding $parent[ItemsControl].DataContext.LeftMouseButtonDown}" />
@@ -58,6 +56,16 @@
                 </ia:EventTriggerBehavior>
               </i:Interaction.Behaviors>
             </Ellipse>
+          </DataTemplate>
+          <DataTemplate DataType="{x:Type m:Square}">
+            <Rectangle Fill="{Binding FillColor}"
+                       Width="{Binding Length}"
+                       Height="{Binding Length}"
+                       Canvas.Left="{Binding Left}"
+                       Canvas.Top="{Binding Top}" />
+          </DataTemplate>
+          <DataTemplate DataType="{x:Type m:PolyLine}">
+            <Polyline Stroke="{Binding FillColor}" Points="{Binding Points}" />
           </DataTemplate>
         </ItemsControl.DataTemplates>
       </ItemsControl>
