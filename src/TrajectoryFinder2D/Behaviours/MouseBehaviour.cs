@@ -5,7 +5,7 @@ using Avalonia.Xaml.Interactivity;
 
 namespace TrajectoryFinder2D.Behaviours
 {
-    internal class MouseBehaviour : Behavior<Control>
+    public class MouseBehaviour : Behavior<Control>
     {
         public static readonly AvaloniaProperty MousePositionProperty =
             AvaloniaProperty.Register<MouseBehaviour, Models.Point>(nameof(MousePosition));
