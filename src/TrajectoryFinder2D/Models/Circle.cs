@@ -46,7 +46,7 @@ namespace TrajectoryFinder2D.Models
         public Circle()
         {
             FillColor = new Avalonia.Media.SolidColorBrush(
-                            Avalonia.Media.Colors.Green, 0.1);
+                            Avalonia.Media.Colors.Green, 0.2);
         }
 
         public Circle(double radius, Point center)

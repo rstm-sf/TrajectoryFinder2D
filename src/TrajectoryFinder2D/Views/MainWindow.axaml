@@ -18,13 +18,6 @@
   </Window.Styles>
   <Grid>
     <DockPanel>
-      <!-- Un-comment if you want to view the coordinates -->
-      <!--
-      <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
-        <TextBlock Text="{Binding Panel.X, StringFormat='X={0}'}" />
-        <TextBlock Text="{Binding Panel.Y, StringFormat='y={0}'}" />
-      </StackPanel>
-      -->
       <ItemsControl Items="{Binding ShapeCollection}">
         <ItemsControl.ItemsPanel>
           <ItemsPanelTemplate>

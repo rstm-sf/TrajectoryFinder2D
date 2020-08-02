@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Avalonia.Threading;
 using TrajectoryFinder2D.Commands;
 using TrajectoryFinder2D.Models;
 
@@ -7,7 +9,9 @@ namespace TrajectoryFinder2D.ViewModels
 {
     internal class MainWindowViewModel : ObservableObjectBase
     {
-        bool _isShapeCaptured;
+        private readonly DispatcherTimer _timer;
+
+        private bool _isShapeCaptured;
 
         private Point _panelMousePosition;
 
@@ -66,12 +70,34 @@ namespace TrajectoryFinder2D.ViewModels
                     circle.Top += _panelMousePosition.Y - _previousPanelMousePosition.Y;
                     SavePreviousPanelMousePosition();
                 });
+
+            var ticksPerSecond = 1;
+            _timer = new DispatcherTimer
+            {
+                Interval = new TimeSpan(0, 0, 0, 0, 1000 / ticksPerSecond)
+            };
+            _timer.Tick += (sender, args) => Tick();
+            _timer.Start();
         }
 
         private void SavePreviousPanelMousePosition()
         {
             _previousPanelMousePosition.X = _panelMousePosition.X;
             _previousPanelMousePosition.Y = _panelMousePosition.Y;
+        }
+
+        private void Tick()
+        {
+            const int radius = 50;
+            var rand = new Random();
+            var y = rand.Next(100) + radius;
+
+            foreach (var circle in _circles)
+            {
+                circle.Radius = radius;
+                circle.Center = new Point { X = radius, Y = y };
+                y += 2 * radius + 10;
+            }
         }
 
         private ObservableCollection<ShapeBase> CreateShapeCollection()
