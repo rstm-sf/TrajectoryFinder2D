@@ -1,5 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
+using System.Threading.Tasks;
+using Avalonia.Controls;
 using Avalonia.Threading;
 using TrajectoryFinder2D.Commands;
 using TrajectoryFinder2D.Models;
@@ -32,6 +36,24 @@ namespace TrajectoryFinder2D.ViewModels
         private readonly double _velocity;
 
         private readonly TravelStarts _travelStarts;
+
+        private readonly SaveFileDialog _saveFileDialog;
+
+        private bool _isStartEnabled;
+
+        private bool _isSaveEnabled;
+
+        public bool IsStartEnabled
+        {
+            get => _isStartEnabled;
+            set => SetProperty(ref _isStartEnabled, value);
+        }
+
+        public bool IsSaveEnabled
+        {
+            get => _isSaveEnabled;
+            set => SetProperty(ref _isSaveEnabled, value);
+        }
 
         public RelayCommand<Circle> PreviewMouseMove { get; }
 
@@ -86,7 +108,8 @@ namespace TrajectoryFinder2D.ViewModels
                     SavePreviousPanelMousePosition();
                 });
 
-            Start = new RelayCommand(_ => _timer.Start());
+            IsStartEnabled = true;
+            Start = new RelayCommand(_ => _timer.Start(), _ => IsStartEnabled);
 
             var ticksPerSecond = 1;
             _timer = new DispatcherTimer
@@ -94,6 +117,30 @@ namespace TrajectoryFinder2D.ViewModels
                 Interval = new TimeSpan(0, 0, 0, 0, 1000 / ticksPerSecond)
             };
             _timer.Tick += (sender, args) => Tick();
+
+            _saveFileDialog = new SaveFileDialog();
+            _saveFileDialog.Filters.Add(new FileDialogFilter()
+            {
+                Name = "Text",
+                Extensions = { "txt" },
+            });
+        }
+
+        public async Task Save()
+        {
+            var result = await _saveFileDialog.ShowAsync(new Window());
+            if (result != null)
+            {
+                var sb = new StringBuilder();
+                foreach (var point in _polyLine.Points)
+                {
+                    var x = (point.X - Offset.X) / Scale;
+                    var y = (point.Y - Offset.Y) / Scale;
+                    sb.AppendLine(x + ", " + y);
+                }
+
+                await File.WriteAllTextAsync(result, sb.ToString());
+            }
         }
 
         private void SavePreviousPanelMousePosition()
@@ -107,6 +154,7 @@ namespace TrajectoryFinder2D.ViewModels
             if (_tickCount == _travelStarts.ToPointTimes.Count)
             {
                 _timer.Stop();
+                IsSaveEnabled = true;
                 return;
             }
 
@@ -127,6 +175,8 @@ namespace TrajectoryFinder2D.ViewModels
             }
 
             ++_tickCount;
+            if (_tickCount == 1)
+                IsStartEnabled = false;
         }
 
         private Point ConvertToViewPoint(Point point) =>

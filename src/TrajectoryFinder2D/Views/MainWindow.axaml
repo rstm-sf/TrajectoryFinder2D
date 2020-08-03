@@ -18,11 +18,18 @@
     </Style>
   </Window.Styles>
   <DockPanel>
+    <Button Content="Save"
+            DockPanel.Dock="Bottom"
+            Margin="4"
+            HorizontalAlignment="Stretch"
+            Command="{Binding Save}"
+            IsEnabled="{Binding IsSaveEnabled}" />
     <Button Content="Start"
             DockPanel.Dock="Bottom"
             Margin="4"
             HorizontalAlignment="Stretch"
-            Command="{Binding Start}"/>
+            Command="{Binding Start}"
+            IsEnabled="{Binding IsStartEnabled}" />
     <ItemsControl Items="{Binding ShapeCollection}">
       <ItemsControl.ItemsPanel>
         <ItemsPanelTemplate>
