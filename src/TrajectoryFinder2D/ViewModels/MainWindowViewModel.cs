@@ -1,25 +1,18 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Avalonia.Controls;
-using Avalonia.Threading;
 using TrajectoryFinder2D.Commands;
 using TrajectoryFinder2D.Models;
 using TrajectoryFinder2D.Utils;
 
 namespace TrajectoryFinder2D.ViewModels
 {
-    internal class MainWindowViewModel : ObservableObjectBase
+    internal class MainWindowViewModel : TrajectoryFinderViewModelBase
     {
         private const double Scale = 6;
 
         private readonly Point Offset = new Point { X = 200, Y = 200, };
-
-        private readonly DispatcherTimer _timer;
-
-        private int _tickCount;
 
         private bool _isShapeCaptured;
 
@@ -27,33 +20,7 @@ namespace TrajectoryFinder2D.ViewModels
 
         private readonly Point _previousPanelMousePosition;
 
-        private readonly IReadOnlyList<Circle> _circles;
-
-        private readonly Square _square;
-
-        private readonly PolyLine _polyLine;
-
-        private readonly double _velocity;
-
         private readonly TravelStarts _travelStarts;
-
-        private readonly SaveFileDialog _saveFileDialog;
-
-        private bool _isStartEnabled;
-
-        private bool _isSaveEnabled;
-
-        public bool IsStartEnabled
-        {
-            get => _isStartEnabled;
-            set => SetProperty(ref _isStartEnabled, value);
-        }
-
-        public bool IsSaveEnabled
-        {
-            get => _isSaveEnabled;
-            set => SetProperty(ref _isSaveEnabled, value);
-        }
 
         public RelayCommand<Circle> PreviewMouseMove { get; }
 
@@ -61,31 +28,21 @@ namespace TrajectoryFinder2D.ViewModels
 
         public RelayCommand LeftMouseButtonDown { get; }
 
-        public RelayCommand Start { get; }
-
         public Point PanelMousePosition
         {
             get => _panelMousePosition;
             set => SetProperty(ref _panelMousePosition, value);
         }
 
-        public ItemsChangeObservableCollection<ShapeBase> ShapeCollection { get; set; }
-
         public MainWindowViewModel()
         {
-            _velocity = 1e6;
             _travelStarts = new TravelStarts();
 
-            _circles = new List<Circle>()
+            for (var i = 0; i < _circles.Count; ++i)
             {
-                new Circle(50, ConvertToViewPoint(_travelStarts.Points[0])),
-                new Circle(50, ConvertToViewPoint(_travelStarts.Points[1])),
-                new Circle(50, ConvertToViewPoint(_travelStarts.Points[2])),
-            };
-            _square = new Square(20);
-            _polyLine = new PolyLine();
-
-            ShapeCollection = new ItemsChangeObservableCollection<ShapeBase>(_circles);
+                _circles[i].Radius = 50;
+                _circles[i].Center = ConvertToViewPoint(_travelStarts.Points[i]);
+            }
 
             _previousPanelMousePosition = new Point { X = -1, Y = -1 };
 
@@ -107,23 +64,6 @@ namespace TrajectoryFinder2D.ViewModels
                     circle.Top += _panelMousePosition.Y - _previousPanelMousePosition.Y;
                     SavePreviousPanelMousePosition();
                 });
-
-            IsStartEnabled = true;
-            Start = new RelayCommand(_ => _timer.Start(), _ => IsStartEnabled);
-
-            var ticksPerSecond = 1;
-            _timer = new DispatcherTimer
-            {
-                Interval = new TimeSpan(0, 0, 0, 0, 1000 / ticksPerSecond)
-            };
-            _timer.Tick += (sender, args) => Tick();
-
-            _saveFileDialog = new SaveFileDialog();
-            _saveFileDialog.Filters.Add(new FileDialogFilter()
-            {
-                Name = "Text",
-                Extensions = { "txt" },
-            });
         }
 
         public async Task Save()
@@ -149,18 +89,18 @@ namespace TrajectoryFinder2D.ViewModels
             _previousPanelMousePosition.Y = _panelMousePosition.Y;
         }
 
-        private void Tick()
+        protected override bool TryTick()
         {
-            if (_tickCount == _travelStarts.ToPointTimes.Count)
+            if (TickCount == _travelStarts.ToPointTimes.Count)
             {
-                _timer.Stop();
-                IsSaveEnabled = true;
-                return;
+                for (int i = 0; i < _circles.Count + 1; i++)
+                    ShapeCollection.RemoveAt(0);
+                return false;
             }
 
-            var times = _travelStarts.ToPointTimes[_tickCount];
+            var times = _travelStarts.ToPointTimes[TickCount];
             for (var i = 0; i < _circles.Count; ++i)
-                _circles[i].Radius = ConvertToViewRadius(times[i] * _velocity);
+                _circles[i].Radius = ConvertToViewRadius(times[i] * _travelStarts.Velocity);
 
             if (MathHelper.TryFindThreeCircleIntersection(
                 _circles[0], _circles[1], _circles[2], out var point))
@@ -174,9 +114,7 @@ namespace TrajectoryFinder2D.ViewModels
                 }
             }
 
-            ++_tickCount;
-            if (_tickCount == 1)
-                IsStartEnabled = false;
+            return true;
         }
 
         private Point ConvertToViewPoint(Point point) =>

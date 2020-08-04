@@ -9,6 +9,9 @@ namespace TrajectoryFinder2D.Models
     internal class ItemsChangeObservableCollection<T> : ObservableCollection<T>
         where T : INotifyPropertyChanged
     {
+        public ItemsChangeObservableCollection()
+        { }
+
         public ItemsChangeObservableCollection(IEnumerable<T> collection)
             : base(collection)
         { }

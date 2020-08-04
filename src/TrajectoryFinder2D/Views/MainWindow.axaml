@@ -7,7 +7,7 @@
         xmlns:b="clr-namespace:TrajectoryFinder2D.Behaviours"
         xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
         xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="400"
         x:Class="TrajectoryFinder2D.Views.MainWindow"
         Width="600" Height="600"
         Title="TrajectoryFinder2D">
