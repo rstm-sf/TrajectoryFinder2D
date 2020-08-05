@@ -1,7 +1,11 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:TrajectoryFinder2D"
              x:Class="TrajectoryFinder2D.App">
-    <Application.Styles>
-        <StyleInclude Source="avares://Avalonia.Themes.Fluent/Accents/FluentLight.xaml" />
-    </Application.Styles>
+  <Application.DataTemplates>
+    <local:ViewLocator/>
+  </Application.DataTemplates>
+  <Application.Styles>
+    <StyleInclude Source="avares://Avalonia.Themes.Fluent/Accents/FluentLight.xaml" />
+  </Application.Styles>
 </Application>

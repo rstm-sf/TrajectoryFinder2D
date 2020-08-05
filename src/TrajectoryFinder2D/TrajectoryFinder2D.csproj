@@ -24,6 +24,9 @@
       <SubType>Code</SubType>
       <DependentUpon>App.axaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\ModeSwitcherView.axaml.cs">
+      <DependentUpon>ModeSwitcherView.axaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>

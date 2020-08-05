@@ -1,0 +1,51 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="400"
+             xmlns:m="clr-namespace:TrajectoryFinder2D.Models"
+             x:Class="TrajectoryFinder2D.Views.TrajectoryFinderView">
+  <UserControl.Styles>
+    <Style Selector="ItemsControl > ContentPresenter">
+      <Setter Property="Canvas.Left" Value="{Binding Left}" />
+      <Setter Property="Canvas.Top" Value="{Binding Top}" />
+    </Style>
+  </UserControl.Styles>
+  <DockPanel>
+    <Button Content="Save"
+            DockPanel.Dock="Bottom"
+            Margin="4"
+            HorizontalAlignment="Stretch"
+            Command="{Binding Save}"
+            IsEnabled="{Binding IsSaveEnabled}" />
+    <Button Content="Start"
+            DockPanel.Dock="Bottom"
+            Margin="4"
+            HorizontalAlignment="Stretch"
+            Command="{Binding Start}"
+            IsEnabled="{Binding IsStartEnabled}" />
+    <ItemsControl Items="{Binding ShapeCollection}">
+      <ItemsControl.ItemsPanel>
+        <ItemsPanelTemplate>
+          <Canvas Background="White" Margin="4" />
+        </ItemsPanelTemplate>
+      </ItemsControl.ItemsPanel>
+      <ItemsControl.DataTemplates>
+        <DataTemplate DataType="{x:Type m:Circle}">
+          <Ellipse Fill="{Binding FillColor}"
+                    Stroke="Black"
+                    Width="{Binding Diameter}"
+                    Height="{Binding Diameter}" />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type m:Square}">
+          <Rectangle Fill="{Binding FillColor}"
+                      Width="{Binding Length}"
+                      Height="{Binding Length}" />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type m:PolyLine}">
+          <Polyline Stroke="{Binding FillColor}" Points="{Binding Points}" />
+        </DataTemplate>
+      </ItemsControl.DataTemplates>
+    </ItemsControl>
+  </DockPanel>
+</UserControl>

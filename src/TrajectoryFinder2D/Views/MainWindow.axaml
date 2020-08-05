@@ -2,73 +2,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:m="clr-namespace:TrajectoryFinder2D.Models"
-        xmlns:vm="clr-namespace:TrajectoryFinder2D.ViewModels"
-        xmlns:b="clr-namespace:TrajectoryFinder2D.Behaviours"
-        xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
-        xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
-        mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="400"
         x:Class="TrajectoryFinder2D.Views.MainWindow"
         Width="600" Height="600"
-        Title="TrajectoryFinder2D">
-  <Window.Styles>
-    <Style Selector="ItemsControl > ContentPresenter">
-      <Setter Property="Canvas.Left" Value="{Binding Left}" />
-      <Setter Property="Canvas.Top" Value="{Binding Top}" />
-    </Style>
-  </Window.Styles>
-  <DockPanel>
-    <Button Content="Save"
-            DockPanel.Dock="Bottom"
-            Margin="4"
-            HorizontalAlignment="Stretch"
-            Command="{Binding Save}"
-            IsEnabled="{Binding IsSaveEnabled}" />
-    <Button Content="Start"
-            DockPanel.Dock="Bottom"
-            Margin="4"
-            HorizontalAlignment="Stretch"
-            Command="{Binding Start}"
-            IsEnabled="{Binding IsStartEnabled}" />
-    <ItemsControl Items="{Binding ShapeCollection}">
-      <ItemsControl.ItemsPanel>
-        <ItemsPanelTemplate>
-          <Canvas Background="White" Margin="4">
-            <i:Interaction.Behaviors>
-              <b:MouseBehaviour MousePosition="{Binding PanelMousePosition, Mode=OneWayToSource}" />
-            </i:Interaction.Behaviors>
-          </Canvas>
-        </ItemsPanelTemplate>
-      </ItemsControl.ItemsPanel>
-      <ItemsControl.DataTemplates>
-        <DataTemplate DataType="{x:Type m:Circle}">
-          <Ellipse Fill="{Binding FillColor}"
-                    Stroke="Black"
-                    Width="{Binding Diameter}"
-                    Height="{Binding Diameter}" >
-            <i:Interaction.Behaviors>
-              <ia:EventTriggerBehavior EventName="PointerPressed" >
-                <ia:InvokeCommandAction Command="{Binding $parent[ItemsControl].DataContext.LeftMouseButtonDown}" />
-              </ia:EventTriggerBehavior>
-              <ia:EventTriggerBehavior EventName="PointerReleased" >
-                <ia:InvokeCommandAction Command="{Binding $parent[ItemsControl].DataContext.LeftMouseButtonUp}" />
-              </ia:EventTriggerBehavior>
-              <ia:EventTriggerBehavior EventName="PointerMoved" >
-                <ia:InvokeCommandAction Command="{Binding $parent[ItemsControl].DataContext.PreviewMouseMove}"
-                                        CommandParameter="{Binding Path=.}" />
-              </ia:EventTriggerBehavior>
-            </i:Interaction.Behaviors>
-          </Ellipse>
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type m:Square}">
-          <Rectangle Fill="{Binding FillColor}"
-                      Width="{Binding Length}"
-                      Height="{Binding Length}" />
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type m:PolyLine}">
-          <Polyline Stroke="{Binding FillColor}" Points="{Binding Points, Mode=OneWay}" />
-        </DataTemplate>
-      </ItemsControl.DataTemplates>
-    </ItemsControl>
-  </DockPanel>
+        Title="TrajectoryFinder2D"
+        Content="{Binding Content}">
 </Window>
