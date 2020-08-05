@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using Avalonia.Media;
 
 namespace TrajectoryFinder2D.Models
@@ -53,6 +54,8 @@ namespace TrajectoryFinder2D.Models
             Center = new Point();
             FillColor = SolidColorBrushes[Count % SolidColorBrushes.Count];
             ++Count;
+
+            PropertyChanged += CirclePropertyChanged;
         }
 
         public Circle(double radius, Point center)
@@ -66,6 +69,25 @@ namespace TrajectoryFinder2D.Models
         {
             Left = _center.X - _radius;
             Top = _center.Y - _radius;
+        }
+
+        private void CirclePropertyChanged(object sender, PropertyChangedEventArgs args)
+        {
+            switch (args.PropertyName)
+            {
+                case nameof(Left):
+                    {
+                        var point = new Point { X = Left + _radius, Y = _center.Y };
+                        SetProperty(ref _center, point, nameof(Center));
+                        break;
+                    }
+                case nameof(Top):
+                    {
+                        var point = new Point { X = _center.X, Y = Top + _radius };
+                        SetProperty(ref _center, point, nameof(Center));
+                        break;
+                    }
+            }
         }
     }
 }

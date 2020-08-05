@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 
 namespace TrajectoryFinder2D.Models
 {
@@ -36,6 +37,8 @@ namespace TrajectoryFinder2D.Models
             Center = new Point();
             Length = length;
             FillColor = Avalonia.Media.Brushes.Brown;
+
+            PropertyChanged += SquarePropertyChanged;
         }
 
         public Square(double length, Point center)
@@ -46,8 +49,27 @@ namespace TrajectoryFinder2D.Models
 
         private void UpdateLeftTopCorner()
         {
-            Left = Center.X - Length / 2;
-            Top = Center.Y - Length / 2;
+            Left = _center.X - _length / 2;
+            Top = _center.Y - _length / 2;
+        }
+
+        private void SquarePropertyChanged(object sender, PropertyChangedEventArgs args)
+        {
+            switch (args.PropertyName)
+            {
+                case nameof(Left):
+                    {
+                        var point = new Point { X = Left + _length / 2, Y = _center.Y };
+                        SetProperty(ref _center, point, nameof(Center));
+                        break;
+                    }
+                case nameof(Top):
+                    {
+                        var point = new Point { X = _center.X, Y = Top + _length / 2 };
+                        SetProperty(ref _center, point, nameof(Center));
+                        break;
+                    }
+            }
         }
     }
 }

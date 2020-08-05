@@ -11,8 +11,8 @@
              x:Class="TrajectoryFinder2D.Views.DataGeneratorView">
   <UserControl.Styles>
     <Style Selector="ItemsControl > ContentPresenter">
-      <Setter Property="Canvas.Left" Value="{Binding Left}" />
-      <Setter Property="Canvas.Top" Value="{Binding Top}" />
+      <Setter Property="Canvas.Left" Value="{Binding Left, Mode=OneWay}" />
+      <Setter Property="Canvas.Top" Value="{Binding Top, Mode=OneWay}" />
     </Style>
   </UserControl.Styles>
   <DockPanel>
@@ -40,10 +40,9 @@
       </ItemsControl.ItemsPanel>
       <ItemsControl.DataTemplates>
         <DataTemplate DataType="{x:Type m:Circle}">
-          <Ellipse Fill="{Binding FillColor}"
-                    Stroke="Black"
-                    Width="{Binding Diameter}"
-                    Height="{Binding Diameter}" >
+          <Ellipse Fill="{Binding FillColor, Mode=OneWay}"
+                   Width="{Binding Diameter, Mode=OneWay}"
+                   Height="{Binding Diameter, Mode=OneWay}" >
             <i:Interaction.Behaviors>
               <ia:EventTriggerBehavior EventName="PointerPressed" >
                 <ia:InvokeCommandAction Command="{Binding $parent[ItemsControl].DataContext.LeftMouseButtonDown}" />
@@ -59,12 +58,25 @@
           </Ellipse>
         </DataTemplate>
         <DataTemplate DataType="{x:Type m:Square}">
-          <Rectangle Fill="{Binding FillColor}"
-                      Width="{Binding Length}"
-                      Height="{Binding Length}" />
+          <Rectangle Fill="{Binding FillColor, Mode=OneWay}"
+                     Width="{Binding Length, Mode=OneWay}"
+                     Height="{Binding Length, Mode=OneWay}">
+            <i:Interaction.Behaviors>
+              <ia:EventTriggerBehavior EventName="PointerPressed" >
+                <ia:InvokeCommandAction Command="{Binding $parent[ItemsControl].DataContext.LeftMouseButtonDown}" />
+              </ia:EventTriggerBehavior>
+              <ia:EventTriggerBehavior EventName="PointerReleased" >
+                <ia:InvokeCommandAction Command="{Binding $parent[ItemsControl].DataContext.LeftMouseButtonUp}" />
+              </ia:EventTriggerBehavior>
+              <ia:EventTriggerBehavior EventName="PointerMoved" >
+                <ia:InvokeCommandAction Command="{Binding $parent[ItemsControl].DataContext.PreviewMouseMove}"
+                                        CommandParameter="{Binding Path=.}" />
+              </ia:EventTriggerBehavior>
+            </i:Interaction.Behaviors>
+          </Rectangle>
         </DataTemplate>
         <DataTemplate DataType="{x:Type m:PolyLine}">
-          <Polyline Stroke="{Binding FillColor}" Points="{Binding Points, Mode=OneWay}" />
+          <Polyline Stroke="{Binding FillColor, Mode=OneWay}" Points="{Binding Points, Mode=OneWay}" />
         </DataTemplate>
       </ItemsControl.DataTemplates>
     </ItemsControl>

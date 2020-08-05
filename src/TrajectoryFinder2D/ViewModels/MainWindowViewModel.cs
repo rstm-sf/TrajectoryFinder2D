@@ -19,5 +19,8 @@ namespace TrajectoryFinder2D.ViewModels
 
         public void OpenTrajectoryFinder() =>
             Content = new TrajectoryFinderViewModel();
+
+        public void OpenDataGenerator() =>
+            Content = new DataGeneratorViewModel();
     }
 }

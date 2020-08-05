@@ -11,7 +11,7 @@ namespace TrajectoryFinder2D.ViewModels
 
         private readonly Point _previousPanelMousePosition;
 
-        public RelayCommand<Circle> PreviewMouseMove { get; }
+        public RelayCommand<ShapeWithLeftTopCornerBase> PreviewMouseMove { get; }
 
         public RelayCommand LeftMouseButtonUp { get; }
 
@@ -36,15 +36,28 @@ namespace TrajectoryFinder2D.ViewModels
 
             LeftMouseButtonUp = new RelayCommand(_ => _isShapeCaptured = false);
 
-            PreviewMouseMove = new RelayCommand<Circle>(
-                circle =>
+            PreviewMouseMove = new RelayCommand<ShapeWithLeftTopCornerBase>(
+                shape =>
                 {
                     if (!_isShapeCaptured)
                         return;
-                    circle.Left += _panelMousePosition.X - _previousPanelMousePosition.X;
-                    circle.Top += _panelMousePosition.Y - _previousPanelMousePosition.Y;
+                    shape.Left += _panelMousePosition.X - _previousPanelMousePosition.X;
+                    shape.Top += _panelMousePosition.Y - _previousPanelMousePosition.Y;
                     SavePreviousPanelMousePosition();
                 });
+
+            var radius = 50;
+            var y = radius;
+            foreach (var circle in _circles)
+            {
+                circle.Radius = radius;
+                circle.Center = new Point { X = radius, Y = y };
+                y += 2 * radius + 10;
+            }
+
+            _square.Center = new Point { X = radius, Y = y };
+            _square.Length = 2 * radius;
+            ShapeCollection.Add(_square);
         }
 
         protected override bool TryTick()
