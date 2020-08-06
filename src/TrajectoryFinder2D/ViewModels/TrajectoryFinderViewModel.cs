@@ -61,11 +61,8 @@ namespace TrajectoryFinder2D.ViewModels
             {
                 _square.Center = point;
                 _polyLine.AddPoint(point);
-                if (ShapeCollection.Count == _circles.Count)
-                {
-                    ShapeCollection.Add(_square);
+                if (TickCount == 0)
                     ShapeCollection.Add(_polyLine);
-                }
             }
 
             return true;

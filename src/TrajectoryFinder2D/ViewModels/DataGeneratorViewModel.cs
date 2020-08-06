@@ -56,8 +56,6 @@ namespace TrajectoryFinder2D.ViewModels
             }
 
             _square.Center = new Point { X = radius, Y = y };
-            _square.Length = 2 * radius;
-            ShapeCollection.Add(_square);
         }
 
         protected override bool TryTick()

@@ -7,11 +7,15 @@ using System.ComponentModel;
 namespace TrajectoryFinder2D.Models
 {
     internal class ItemsChangeObservableCollection<T> : ObservableCollection<T>
-        where T : INotifyPropertyChanged
+        where T : ShapeBase
     {
+        private static readonly NotifyCollectionChangedEventArgs ResetCollectionChanged
+            = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset);
+
         public ItemsChangeObservableCollection()
         { }
 
+        // <remarks>In this case, there will be no tracking of changes in the properties of elements.</remarks>
         public ItemsChangeObservableCollection(IEnumerable<T> collection)
             : base(collection)
         { }
@@ -63,7 +67,7 @@ namespace TrajectoryFinder2D.Models
 
         private void item_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            base.OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+            base.OnCollectionChanged(ResetCollectionChanged);
         }
     }
 }

@@ -74,7 +74,16 @@ namespace TrajectoryFinder2D.ViewModels
             _square = new Square(20);
             _polyLine = new PolyLine();
 
-            ShapeCollection = new ItemsChangeObservableCollection<ShapeBase>(_circles);
+            // It is necessary to add immediately so that the collection does not track
+            // changes in the properties of these shapes.
+            ShapeCollection = new ItemsChangeObservableCollection<ShapeBase>(
+                new List<ShapeBase>
+                {
+                    _circles[0],
+                    _circles[1],
+                    _circles[2],
+                    _square,
+                });
 
             _saveFileDialog = new SaveFileDialog();
             _saveFileDialog.Filters.Add(new FileDialogFilter
