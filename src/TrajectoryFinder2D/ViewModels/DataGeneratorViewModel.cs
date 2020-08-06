@@ -1,3 +1,4 @@
+using System;
 using TrajectoryFinder2D.Commands;
 using TrajectoryFinder2D.Models;
 
@@ -5,6 +6,8 @@ namespace TrajectoryFinder2D.ViewModels
 {
     internal class DataGeneratorViewModel : TrajectoryFinderViewModelBase
     {
+        private readonly PointGenerator _pointGenerator;
+
         private bool _isShapeCaptured;
 
         private Point _panelMousePosition;
@@ -23,8 +26,10 @@ namespace TrajectoryFinder2D.ViewModels
             set => SetProperty(ref _panelMousePosition, value);
         }
 
-        public DataGeneratorViewModel()
+        public DataGeneratorViewModel() : base(10)
         {
+            _pointGenerator = new PointGenerator(3, 3);
+
             _previousPanelMousePosition = new Point { X = -1, Y = -1 };
 
             LeftMouseButtonDown = new RelayCommand(
@@ -60,7 +65,21 @@ namespace TrajectoryFinder2D.ViewModels
 
         protected override bool TryTick()
         {
-            return false;
+            var newPoint = _pointGenerator.GetNewPoint(_square.Center);
+            _square.Center = newPoint;
+            _polyLine.AddPoint(newPoint);
+
+            foreach (var circle in _circles)
+            {
+                var dx = circle.Center.X - newPoint.X;
+                var dy = circle.Center.Y - newPoint.Y;
+                circle.Radius = Math.Sqrt(dx * dx + dy * dy);
+            }
+
+            if (TickCount == 0)
+                ShapeCollection.Add(_polyLine);
+
+            return true;
         }
 
         private void SavePreviousPanelMousePosition()

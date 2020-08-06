@@ -1,14 +1,15 @@
 using System;
+using MathNet.Numerics.Random;
 
 namespace TrajectoryFinder2D.Models
 {
     internal class PointGenerator
     {
-        private static readonly Random s_random = new Random();
+        private static readonly Random s_random = new MersenneTwister(39);
 
         private static readonly int s_sidesCount = Enum.GetNames(typeof(Sides)).Length;
 
-        private const int SideMoveMaxCount = 10;
+        private const int SideMoveMaxCount = 20;
 
         private int _sideMoveCurrentCount;
 
