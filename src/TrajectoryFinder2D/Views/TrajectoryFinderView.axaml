@@ -18,18 +18,12 @@
             HorizontalAlignment="Stretch"
             Command="{Binding Save}"
             IsEnabled="{Binding IsSaveEnabled}" />
-    <Button Content="Stop"
+    <Button Content="{Binding PauseContinueText}"
             DockPanel.Dock="Bottom"
             Margin="4"
             HorizontalAlignment="Stretch"
-            Command="{Binding Stop}"
-            IsEnabled="{Binding IsStopEnabled}" />
-    <Button Content="Start"
-            DockPanel.Dock="Bottom"
-            Margin="4"
-            HorizontalAlignment="Stretch"
-            Command="{Binding Start}"
-            IsEnabled="{Binding IsStartEnabled}" />
+            Command="{Binding PauseContinue}"
+            IsEnabled="{Binding IsPauseContinueEnabled} "/>
     <ItemsControl Items="{Binding ShapeCollection}">
       <ItemsControl.ItemsPanel>
         <ItemsPanelTemplate>

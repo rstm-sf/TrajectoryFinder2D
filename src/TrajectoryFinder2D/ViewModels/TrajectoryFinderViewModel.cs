@@ -51,7 +51,7 @@ namespace TrajectoryFinder2D.ViewModels
                     ShapeCollection.RemoveAt(0);
 
                 IsSaveEnabled = true;
-                IsStopEnabled = false;
+                IsPauseContinueEnabled = false;
                 return false;
             }
 

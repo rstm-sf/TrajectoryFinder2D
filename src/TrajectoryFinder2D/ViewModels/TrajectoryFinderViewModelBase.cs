@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Avalonia.Controls;
 using Avalonia.Threading;
-using TrajectoryFinder2D.Commands;
 using TrajectoryFinder2D.Models;
 
 namespace TrajectoryFinder2D.ViewModels
@@ -11,9 +10,11 @@ namespace TrajectoryFinder2D.ViewModels
     {
         private readonly DispatcherTimer _timer;
 
-        private bool _isStartEnabled;
+        private bool _isPause;
 
-        private bool _isStopEnabled;
+        private string _pauseContinueText;
+
+        private bool _isPauseContinueEnabled;
 
         private bool _isSaveEnabled;
 
@@ -32,22 +33,17 @@ namespace TrajectoryFinder2D.ViewModels
             get => _isSaveEnabled;
             set => SetProperty(ref _isSaveEnabled, value);
         }
-
-        public bool IsStartEnabled
+        public bool IsPauseContinueEnabled
         {
-            get => _isStartEnabled;
-            set => SetProperty(ref _isStartEnabled, value);
+            get => _isPauseContinueEnabled;
+            set => SetProperty(ref _isPauseContinueEnabled, value);
         }
 
-        public bool IsStopEnabled
+        public string PauseContinueText
         {
-            get => _isStopEnabled;
-            set => SetProperty(ref _isStopEnabled, value);
+            get => _pauseContinueText;
+            set => SetProperty(ref _pauseContinueText, value);
         }
-
-        public RelayCommand Start { get; }
-
-        public RelayCommand Stop { get; }
 
         public ItemsChangeObservableCollection<ShapeBase> ShapeCollection { get; }
 
@@ -69,24 +65,8 @@ namespace TrajectoryFinder2D.ViewModels
                 }
             };
 
-            IsStartEnabled = true;
-            Start = new RelayCommand(
-                _ =>
-                {
-                    IsStartEnabled = false;
-                    IsStopEnabled = true;
-                    IsSaveEnabled = false;
-                    _timer.Start();
-                });
-
-            Stop = new RelayCommand(
-                _ =>
-                {
-                    IsStartEnabled = true;
-                    IsStopEnabled = false;
-                    IsSaveEnabled = true;
-                    _timer.Stop();
-                });
+            PauseContinueText = "Start";
+            IsPauseContinueEnabled = true;
 
             _circles = new List<Circle>
             {
@@ -114,6 +94,17 @@ namespace TrajectoryFinder2D.ViewModels
                 Name = "Text",
                 Extensions = { "txt" },
             });
+        }
+
+        public void PauseContinue()
+        {
+            _isPause = !_isPause;
+            PauseContinueText = _isPause ? "Pause" : "Continue";
+
+            if (TickCount != 0)
+                IsSaveEnabled = !IsSaveEnabled;
+
+            _timer.IsEnabled = !_timer.IsEnabled;
         }
 
         protected abstract bool TryTick();
