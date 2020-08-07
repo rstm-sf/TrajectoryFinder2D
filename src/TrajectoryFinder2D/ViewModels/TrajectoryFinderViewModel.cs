@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Avalonia.Controls;
@@ -10,21 +12,28 @@ namespace TrajectoryFinder2D.ViewModels
 {
     internal class TrajectoryFinderViewModel : TrajectoryFinderViewModelBase
     {
-        private const double Scale = 6;
+        private readonly OpenFileDialog _openFileDialog;
 
-        private readonly Point Offset = new Point { X = 200, Y = 200, };
+        private TravelStarts _travelStarts;
 
-        private readonly TravelStarts _travelStarts;
+        private bool _isReadEnabled;
+
+        public bool IsVisibleRead
+        {
+            get => _isReadEnabled;
+            set => SetProperty(ref _isReadEnabled, value);
+        }
 
         public TrajectoryFinderViewModel()
         {
-            _travelStarts = new TravelStarts();
-
-            for (var i = 0; i < _circles.Count; ++i)
+            _openFileDialog = new OpenFileDialog();
+            _openFileDialog.Filters.Add(new FileDialogFilter
             {
-                _circles[i].Radius = 50;
-                _circles[i].Center = ConvertToViewPoint(_travelStarts.Points[i]);
-            }
+                Name = "Text",
+                Extensions = { "txt" },
+            });
+
+            IsVisibleRead = true;
         }
 
         public async Task Save()
@@ -34,16 +43,45 @@ namespace TrajectoryFinder2D.ViewModels
             {
                 var sb = new StringBuilder();
                 foreach (var point in _polyLine.Points)
-                {
-                    var x = (point.X - Offset.X) / Scale;
-                    var y = (point.Y - Offset.Y) / Scale;
                     sb.AppendLine(string.Concat(
-                        x.ToString(CultureInfo.InvariantCulture),
+                        point.X.ToString(CultureInfo.InvariantCulture),
                         ", ",
-                        y.ToString(CultureInfo.InvariantCulture)));
-                }
+                        point.Y.ToString(CultureInfo.InvariantCulture)));
 
                 await File.WriteAllTextAsync(result, sb.ToString());
+            }
+        }
+
+        public async Task Read()
+        {
+            var result = await _openFileDialog.ShowAsync(new Window());
+            if (result != null)
+            {
+                var lines = (await File.ReadAllLinesAsync(result[0])).ToArray();
+
+                var numbers = lines.First().Split(',');
+                for (var i = 0; i < _circles.Count; ++i)
+                {
+                    var x = double.Parse(numbers[2 * i], NumberStyles.Float, CultureInfo.InvariantCulture);
+                    var y = double.Parse(numbers[2 * i + 1], NumberStyles.Float, CultureInfo.InvariantCulture);
+                    _circles[i].Center = new Point { X = x, Y = y };
+                }
+
+                var tickTimes = new List<IReadOnlyList<double>>(lines.Length - 1);
+                foreach (var line in lines.Skip(1))
+                {
+                    var timeText = line.Split(',');
+                    var time = new List<double>(_circles.Count);
+                    for (var i = 0; i < _circles.Count; ++i)
+                        time.Add(double.Parse(timeText[i], NumberStyles.Float, CultureInfo.InvariantCulture));
+                    tickTimes.Add(time);
+                }
+
+                _travelStarts = new TravelStarts(
+                    _circles.Select(x => x.Center).ToList(),
+                    tickTimes);
+
+                IsVisibleRead = false;
             }
         }
 
@@ -61,7 +99,7 @@ namespace TrajectoryFinder2D.ViewModels
 
             var times = _travelStarts.ToPointTimes[TickCount];
             for (var i = 0; i < _circles.Count; ++i)
-                _circles[i].Radius = ConvertToViewRadius(times[i] * _travelStarts.Velocity);
+                _circles[i].Radius = times[i] * _travelStarts.Velocity;
 
             if (MathHelper.TryFindThreeCircleIntersection(
                 _circles[0], _circles[1], _circles[2], out var point))
@@ -74,15 +112,5 @@ namespace TrajectoryFinder2D.ViewModels
 
             return true;
         }
-
-        private Point ConvertToViewPoint(Point point) =>
-            new Point
-            {
-                X = point.X * Scale + Offset.X,
-                Y = point.Y * Scale + Offset.Y,
-            };
-
-        private double ConvertToViewRadius(double radius) =>
-            radius * Scale;
     }
 }

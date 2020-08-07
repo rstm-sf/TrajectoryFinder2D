@@ -24,6 +24,12 @@
             HorizontalAlignment="Stretch"
             Command="{Binding PauseContinue}"
             IsEnabled="{Binding IsPauseContinueEnabled} "/>
+    <Button Content="Read"
+            DockPanel.Dock="Bottom"
+            Margin="4"
+            HorizontalAlignment="Stretch"
+            Command="{Binding Read}"
+            IsVisible="{Binding IsVisibleRead}" />
     <ItemsControl Items="{Binding ShapeCollection}">
       <ItemsControl.ItemsPanel>
         <ItemsPanelTemplate>

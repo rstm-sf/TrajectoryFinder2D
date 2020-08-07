@@ -36,7 +36,7 @@ namespace TrajectoryFinder2D.ViewModels
             set => SetProperty(ref _panelMousePosition, value);
         }
 
-        public DataGeneratorViewModel() : base(10)
+        public DataGeneratorViewModel()
         {
             _pointGenerator = new PointGenerator(3, 3);
 
@@ -62,17 +62,6 @@ namespace TrajectoryFinder2D.ViewModels
                     shape.Top += _panelMousePosition.Y - _previousPanelMousePosition.Y;
                     SavePreviousPanelMousePosition();
                 });
-
-            var radius = 50;
-            var y = radius;
-            foreach (var circle in _circles)
-            {
-                circle.Radius = radius;
-                circle.Center = new Point { X = radius, Y = y };
-                y += 2 * radius + 10;
-            }
-
-            _square.Center = new Point { X = radius, Y = y };
         }
 
         public async Task Save()

@@ -33,6 +33,7 @@ namespace TrajectoryFinder2D.ViewModels
             get => _isSaveEnabled;
             set => SetProperty(ref _isSaveEnabled, value);
         }
+
         public bool IsPauseContinueEnabled
         {
             get => _isPauseContinueEnabled;
@@ -47,7 +48,7 @@ namespace TrajectoryFinder2D.ViewModels
 
         public ItemsChangeObservableCollection<ShapeBase> ShapeCollection { get; }
 
-        protected TrajectoryFinderViewModelBase(int ticksPerSecond = 1)
+        protected TrajectoryFinderViewModelBase(int ticksPerSecond = 10)
         {
             _timer = new DispatcherTimer
             {
@@ -76,6 +77,17 @@ namespace TrajectoryFinder2D.ViewModels
             };
             _square = new Square(20);
             _polyLine = new PolyLine();
+
+            var radius = 50;
+            var y = radius;
+            foreach (var circle in _circles)
+            {
+                circle.Radius = radius;
+                circle.Center = new Point { X = radius, Y = y };
+                y += 2 * radius + 10;
+            }
+
+            _square.Center = new Point { X = radius, Y = y };
 
             // It is necessary to add immediately so that the collection does not track
             // changes in the properties of these shapes.
