@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,7 +37,10 @@ namespace TrajectoryFinder2D.ViewModels
                 {
                     var x = (point.X - Offset.X) / Scale;
                     var y = (point.Y - Offset.Y) / Scale;
-                    sb.AppendLine(x + ", " + y);
+                    sb.AppendLine(string.Concat(
+                        x.ToString(CultureInfo.InvariantCulture),
+                        ", ",
+                        y.ToString(CultureInfo.InvariantCulture)));
                 }
 
                 await File.WriteAllTextAsync(result, sb.ToString());
