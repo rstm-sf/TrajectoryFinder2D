@@ -13,6 +13,8 @@ namespace TrajectoryFinder2D.ViewModels
 
         private bool _isStartEnabled;
 
+        private bool _isStopEnabled;
+
         private bool _isSaveEnabled;
 
         protected readonly IReadOnlyList<Circle> _circles;
@@ -37,7 +39,15 @@ namespace TrajectoryFinder2D.ViewModels
             set => SetProperty(ref _isStartEnabled, value);
         }
 
+        public bool IsStopEnabled
+        {
+            get => _isStopEnabled;
+            set => SetProperty(ref _isStopEnabled, value);
+        }
+
         public RelayCommand Start { get; }
+
+        public RelayCommand Stop { get; }
 
         public ItemsChangeObservableCollection<ShapeBase> ShapeCollection { get; }
 
@@ -52,18 +62,31 @@ namespace TrajectoryFinder2D.ViewModels
                 if (TryTick())
                 {
                     ++TickCount;
-                    if (TickCount == 1)
-                        IsStartEnabled = false;
                 }
                 else
                 {
-                    IsSaveEnabled = true;
                     _timer.Stop();
                 }
             };
 
             IsStartEnabled = true;
-            Start = new RelayCommand(_ => _timer.Start(), _ => IsStartEnabled);
+            Start = new RelayCommand(
+                _ =>
+                {
+                    IsStartEnabled = false;
+                    IsStopEnabled = true;
+                    IsSaveEnabled = false;
+                    _timer.Start();
+                });
+
+            Stop = new RelayCommand(
+                _ =>
+                {
+                    IsStartEnabled = true;
+                    IsStopEnabled = false;
+                    IsSaveEnabled = true;
+                    _timer.Stop();
+                });
 
             _circles = new List<Circle>
             {

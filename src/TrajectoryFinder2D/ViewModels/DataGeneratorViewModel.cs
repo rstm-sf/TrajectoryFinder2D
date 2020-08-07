@@ -63,6 +63,8 @@ namespace TrajectoryFinder2D.ViewModels
             _square.Center = new Point { X = radius, Y = y };
         }
 
+        public void Save() { }
+
         protected override bool TryTick()
         {
             var newPoint = _pointGenerator.GetNewPoint(_square.Center);

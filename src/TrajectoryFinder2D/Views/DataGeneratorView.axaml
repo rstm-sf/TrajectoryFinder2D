@@ -22,6 +22,12 @@
             HorizontalAlignment="Stretch"
             Command="{Binding Save}"
             IsEnabled="{Binding IsSaveEnabled}" />
+    <Button Content="Stop"
+            DockPanel.Dock="Bottom"
+            Margin="4"
+            HorizontalAlignment="Stretch"
+            Command="{Binding Stop}"
+            IsEnabled="{Binding IsStopEnabled}" />
     <Button Content="Start"
             DockPanel.Dock="Bottom"
             Margin="4"

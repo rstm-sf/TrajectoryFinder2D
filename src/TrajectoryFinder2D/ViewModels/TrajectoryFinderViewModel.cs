@@ -49,6 +49,9 @@ namespace TrajectoryFinder2D.ViewModels
             {
                 for (int i = 0; i < _circles.Count + 1; i++)
                     ShapeCollection.RemoveAt(0);
+
+                IsSaveEnabled = true;
+                IsStopEnabled = false;
                 return false;
             }
 
