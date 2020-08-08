@@ -1,0 +1,25 @@
+<Project>
+
+    <PropertyGroup>
+        <VersionPrefix>0.1.0</VersionPrefix>
+        <Authors>TrajectoryFinder2D Contributors</Authors>
+        <Company>TrajectoryFinder2D Contributors</Company>
+        <Description>
+A cross-platform application for finding the 2D trajectory of an object, sending a signal to 3 points.
+
+We know the following:
+- the period of message sending;
+- the velocity of signal travel;
+- the time it took for the signal to reach the points.
+        </Description>
+        <Copyright>Copyright (c) 2020 TrajectoryFinder2D Contributors</Copyright>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <RestoreSources>
+            https://api.nuget.org/v3/index.json;
+            <!-- https://www.myget.org/F/avalonia-ci/api/v2; -->
+        </RestoreSources>
+    </PropertyGroup>
+
+</Project>
