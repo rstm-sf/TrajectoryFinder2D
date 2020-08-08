@@ -45,14 +45,19 @@ namespace TrajectoryFinder2D.ViewModels
 
             _previousPanelMousePosition = new Point { X = -1, Y = -1 };
 
+            bool isCanMoveShape() => TickCount == 0;
+
             LeftMouseButtonDown = new RelayCommand(
                 _ =>
                 {
                     _isShapeCaptured = true;
                     SavePreviousPanelMousePosition();
-                });
+                },
+                _ => isCanMoveShape());
 
-            LeftMouseButtonUp = new RelayCommand(_ => _isShapeCaptured = false);
+            LeftMouseButtonUp = new RelayCommand(
+                _ => _isShapeCaptured = false,
+                _ => isCanMoveShape());
 
             PreviewMouseMove = new RelayCommand<ShapeWithLeftTopCornerBase>(
                 shape =>
@@ -62,7 +67,8 @@ namespace TrajectoryFinder2D.ViewModels
                     shape.Left += _panelMousePosition.X - _previousPanelMousePosition.X;
                     shape.Top += _panelMousePosition.Y - _previousPanelMousePosition.Y;
                     SavePreviousPanelMousePosition();
-                });
+                },
+                _ => isCanMoveShape());
         }
 
         public async Task Save()
