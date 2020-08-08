@@ -18,9 +18,11 @@ namespace TrajectoryFinder2D.ViewModels
         }
 
         public void OpenTrajectoryFinder() =>
-            Content = new TrajectoryFinderViewModel();
+            Content = new TrajectoryFinderViewModel(BackAction);
 
         public void OpenDataGenerator() =>
-            Content = new DataGeneratorViewModel();
+            Content = new DataGeneratorViewModel(BackAction);
+
+        private void BackAction() => Content = Switcher;
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -24,7 +25,8 @@ namespace TrajectoryFinder2D.ViewModels
             set => SetProperty(ref _isReadEnabled, value);
         }
 
-        public TrajectoryFinderViewModel()
+        public TrajectoryFinderViewModel(Action backAction)
+            : base(backAction)
         {
             _openFileDialog = new OpenFileDialog();
             _openFileDialog.Filters.Add(new FileDialogFilter
@@ -94,6 +96,7 @@ namespace TrajectoryFinder2D.ViewModels
 
                 IsSaveEnabled = true;
                 IsPauseContinueEnabled = false;
+                IsBackEnabled = true;
                 return false;
             }
 

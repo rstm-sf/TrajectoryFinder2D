@@ -36,7 +36,8 @@ namespace TrajectoryFinder2D.ViewModels
             set => SetProperty(ref _panelMousePosition, value);
         }
 
-        public DataGeneratorViewModel()
+        public DataGeneratorViewModel(Action backAction)
+            : base(backAction)
         {
             _pointGenerator = new PointGenerator(3, 3);
 

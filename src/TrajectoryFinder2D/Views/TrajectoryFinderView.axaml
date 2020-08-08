@@ -12,22 +12,32 @@
     </Style>
   </UserControl.Styles>
   <DockPanel>
+    <Button Content="Back"
+            DockPanel.Dock="Bottom"
+            Margin="4"
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Center"
+            Command="{Binding Back}"
+            IsEnabled="{Binding IsBackEnabled} "/>
     <Button Content="Save"
             DockPanel.Dock="Bottom"
             Margin="4"
             HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Center"
             Command="{Binding Save}"
             IsEnabled="{Binding IsSaveEnabled}" />
     <Button Content="{Binding PauseContinueText}"
             DockPanel.Dock="Bottom"
             Margin="4"
             HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Center"
             Command="{Binding PauseContinue}"
             IsEnabled="{Binding IsPauseContinueEnabled} "/>
     <Button Content="Read"
             DockPanel.Dock="Bottom"
             Margin="4"
             HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Center"
             Command="{Binding Read}"
             IsVisible="{Binding IsVisibleRead}" />
     <ItemsControl Items="{Binding ShapeCollection}">

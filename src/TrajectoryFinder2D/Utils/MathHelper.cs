@@ -17,8 +17,6 @@ namespace TrajectoryFinder2D.Utils
             var dy = circle2.Center.Y - circle1.Center.Y;
 
             var distance1 = Math.Sqrt((dy * dy) + (dx * dx));
-            distance1 -= distance1 * 5e-2;
-
             if (distance1 > (circle1.Radius + circle2.Radius))
                 return false;
 
@@ -57,12 +55,11 @@ namespace TrajectoryFinder2D.Utils
             dy = intersectionPoint2.Y - circle3.Center.Y;
             var distance5 = Math.Sqrt((dy * dy) + (dx * dx));
 
-            var epsilon = circle3.Radius * 5e-1;
-            if (Math.Abs(distance4 - circle3.Radius) < epsilon)
+            if (Math.Abs(distance4 - circle3.Radius) < 1e-6)
             {
                 point = intersectionPoint1;
             }
-            else if (Math.Abs(distance5 - circle3.Radius) < epsilon)
+            else if (Math.Abs(distance5 - circle3.Radius) < 1e-6)
             {
                 point = intersectionPoint2;
             }

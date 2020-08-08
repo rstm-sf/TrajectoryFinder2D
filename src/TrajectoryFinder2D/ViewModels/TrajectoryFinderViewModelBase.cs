@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Avalonia.Controls;
 using Avalonia.Threading;
+using TrajectoryFinder2D.Commands;
 using TrajectoryFinder2D.Models;
 
 namespace TrajectoryFinder2D.ViewModels
@@ -18,6 +19,8 @@ namespace TrajectoryFinder2D.ViewModels
 
         private bool _isSaveEnabled;
 
+        private bool _isBackEnabled;
+
         protected readonly IReadOnlyList<Circle> _circles;
 
         protected readonly Square _square;
@@ -33,6 +36,11 @@ namespace TrajectoryFinder2D.ViewModels
             get => _isSaveEnabled;
             set => SetProperty(ref _isSaveEnabled, value);
         }
+        public bool IsBackEnabled
+        {
+            get => _isBackEnabled;
+            set => SetProperty(ref _isBackEnabled, value);
+        }
 
         public bool IsPauseContinueEnabled
         {
@@ -46,10 +54,15 @@ namespace TrajectoryFinder2D.ViewModels
             set => SetProperty(ref _pauseContinueText, value);
         }
 
+        public RelayCommand Back { get; }
+
         public ItemsChangeObservableCollection<ShapeBase> ShapeCollection { get; }
 
-        protected TrajectoryFinderViewModelBase(int ticksPerSecond = 10)
+        protected TrajectoryFinderViewModelBase(Action backAction, int ticksPerSecond = 10)
         {
+            if (backAction is null)
+                throw new ArgumentNullException(nameof(backAction));
+
             _timer = new DispatcherTimer
             {
                 Interval = new TimeSpan(0, 0, 0, 0, 1000 / ticksPerSecond)
@@ -68,6 +81,9 @@ namespace TrajectoryFinder2D.ViewModels
 
             PauseContinueText = "Start";
             IsPauseContinueEnabled = true;
+
+            IsBackEnabled = true;
+            Back = new RelayCommand(_ => backAction.Invoke());
 
             _circles = new List<Circle>
             {
@@ -113,8 +129,15 @@ namespace TrajectoryFinder2D.ViewModels
             _isPause = !_isPause;
             PauseContinueText = _isPause ? "Pause" : "Continue";
 
-            if (TickCount != 0)
+            if (TickCount == 0)
+            {
+                IsBackEnabled = false;
+            }
+            else
+            {
                 IsSaveEnabled = !IsSaveEnabled;
+                IsBackEnabled = !IsBackEnabled;
+            }
 
             _timer.IsEnabled = !_timer.IsEnabled;
         }
