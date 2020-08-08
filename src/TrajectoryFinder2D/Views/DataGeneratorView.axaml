@@ -16,27 +16,33 @@
     </Style>
   </UserControl.Styles>
   <DockPanel>
-    <Button Content="Back"
-            DockPanel.Dock="Bottom"
-            Margin="4"
-            HorizontalAlignment="Stretch"
-            HorizontalContentAlignment="Center"
-            Command="{Binding Back}"
-            IsEnabled="{Binding IsBackEnabled} "/>
-    <Button Content="Save"
-            DockPanel.Dock="Bottom"
-            Margin="4"
-            HorizontalAlignment="Stretch"
-            HorizontalContentAlignment="Center"
-            Command="{Binding Save}"
-            IsEnabled="{Binding IsSaveEnabled}" />
-    <Button Content="{Binding PauseContinueText}"
-            DockPanel.Dock="Bottom"
-            Margin="4"
-            HorizontalAlignment="Stretch"
-            HorizontalContentAlignment="Center"
-            Command="{Binding PauseContinue}"
-            IsEnabled="{Binding IsPauseContinueEnabled} "/>
+    <Border DockPanel.Dock="Bottom"
+            VerticalAlignment="Center"
+            CornerRadius="{DynamicResource ControlCornerRadius}"
+            Padding="4" Margin="4"
+            BorderThickness="2"
+            BorderBrush="{DynamicResource SystemChromeBlackLowColor}">
+      <StackPanel Margin="4">
+        <Button Content="{Binding PauseContinueText}"
+                Margin="4"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Center"
+                Command="{Binding PauseContinue}"
+                IsEnabled="{Binding IsPauseContinueEnabled} "/>
+        <Button Content="Save"
+                Margin="4"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Center"
+                Command="{Binding Save}"
+                IsEnabled="{Binding IsSaveEnabled}" />
+        <Button Content="Back"
+                Margin="4"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Center"
+                Command="{Binding Back}"
+                IsEnabled="{Binding IsBackEnabled} "/>
+      </StackPanel>
+    </Border>
     <ItemsControl Items="{Binding ShapeCollection}">
       <ItemsControl.ItemsPanel>
         <ItemsPanelTemplate>

@@ -36,6 +36,7 @@ namespace TrajectoryFinder2D.ViewModels
             });
 
             IsVisibleRead = true;
+            IsPauseContinueEnabled = false;
         }
 
         public async Task Save()
@@ -84,6 +85,7 @@ namespace TrajectoryFinder2D.ViewModels
                     tickTimes);
 
                 IsVisibleRead = false;
+                IsPauseContinueEnabled = true;
             }
         }
 
