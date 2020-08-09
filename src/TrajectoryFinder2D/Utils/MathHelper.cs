@@ -17,11 +17,11 @@ namespace TrajectoryFinder2D.Utils
             var dy = circle2.Center.Y - circle1.Center.Y;
 
             var distance1 = Math.Sqrt((dy * dy) + (dx * dx));
-            if (distance1 > (circle1.Radius + circle2.Radius))
+            if (distance1 - (circle1.Radius + circle2.Radius) * 0.05 > (circle1.Radius + circle2.Radius))
                 return false;
 
             // Check on the one circle is contained in the other
-            if (distance1 < Math.Abs(circle1.Radius - circle2.Radius))
+            if (distance1 + Math.Abs(circle1.Radius - circle2.Radius) * 0.05 < Math.Abs(circle1.Radius - circle2.Radius))
                 return false;
 
             // Determine the distance from point 1 to point 3
@@ -36,7 +36,10 @@ namespace TrajectoryFinder2D.Utils
             var point3Y = circle1.Center.Y + (dy * distance2 / distance1);
 
             // Determine the distance from point 2 to either of the intersection points
-            var distance3 = Math.Sqrt((circle1.Radius * circle1.Radius) - (distance2 * distance2));
+            var coef = (circle1.Radius * circle1.Radius) - (distance2 * distance2);
+            if (-circle1.Radius * circle1.Radius * 0.25 < coef && coef < 0d)
+                coef = 0;
+            var distance3 = Math.Sqrt(coef);
 
             // Now determine the offsets of the intersection points from point 3
             var rx = -dy * (distance3 / distance1);
@@ -55,11 +58,12 @@ namespace TrajectoryFinder2D.Utils
             dy = intersectionPoint2.Y - circle3.Center.Y;
             var distance5 = Math.Sqrt((dy * dy) + (dx * dx));
 
-            if (Math.Abs(distance4 - circle3.Radius) < 1e-6)
+            var epsilon = circle3.Radius * 0.2;
+            if (Math.Abs(distance4 - circle3.Radius) < epsilon)
             {
                 point = intersectionPoint1;
             }
-            else if (Math.Abs(distance5 - circle3.Radius) < 1e-6)
+            else if (Math.Abs(distance5 - circle3.Radius) < epsilon)
             {
                 point = intersectionPoint2;
             }
