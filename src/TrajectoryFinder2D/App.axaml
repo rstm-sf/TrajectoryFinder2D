@@ -6,6 +6,6 @@
     <local:ViewLocator/>
   </Application.DataTemplates>
   <Application.Styles>
-    <StyleInclude Source="avares://Avalonia.Themes.Fluent/Accents/FluentLight.xaml" />
+    <FluentTheme />
   </Application.Styles>
 </Application>
